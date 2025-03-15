@@ -72,32 +72,22 @@ void loop(){
 void timedLights(){
   unsigned long currentMillis = millis();
 
-  if (currentMillis - previousMillis >= interval && state = 0) {
-    // save the last time you blinked the LED
+  if (currentMillis - previousMillis >= interval) {
     previousMillis = currentMillis;
-    // green off, yellow on for 3 seconds
-    digitalWrite(green1, LOW);
-    digitalWrite(yellow1, HIGH);
-    state = 1
-  }
 
-  if (currentMillis - previousMillis >= interval && state = 1) {
-    // save the last time you blinked the LED
-    previousMillis = currentMillis;
-    // turn off   yellow, then turn red on for 5 seconds
-    digitalWrite(yellow1, LOW);
-    digitalWrite(red1, HIGH);
-    state = 2
-  }
-
-  if (currentMillis - previousMillis >= interval && state = 2) {
-    // save the last time you blinked the LED
-    previousMillis = currentMillis;
-    // turn   off red and yellow, then turn on green
-    digitalWrite(yellow1, LOW);
-    digitalWrite(red1,   LOW);
-    digitalWrite(green1, HIGH);
-    state = 0
+    if (state == 0) {
+      digitalWrite(green1, LOW);
+      digitalWrite(yellow1, HIGH);
+      state = 1
+    } else if (state == 1) {
+      digitalWrite(yellow1, LOW);
+      digitalWrite(red1, HIGH);
+      state = 2
+    } else {
+      digitalWrite(red1,   LOW);
+      digitalWrite(green1, HIGH);
+      state = 0
+    }
   }
 }
 
@@ -105,4 +95,5 @@ void changeLights(){
     digitalWrite(yellow1, LOW);
     digitalWrite(red1, LOW);
     digitalWrite(green1, HIGH);
+    state = 0
 }
