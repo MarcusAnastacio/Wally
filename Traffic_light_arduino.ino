@@ -1,7 +1,11 @@
 int red1 = 4;
 int yellow1 = 3;
 int green1 = 2;
-int button_pin= 5;
+int red2 = 10;
+int yellow2 = 11;
+int green2 = 12;
+int button1_pin = 5;
+int button2_pin = 6
 int last_state = LOW;
 
 int trigPin = 9;    // TRIG pin
@@ -16,13 +20,18 @@ unsigned long previousMillis = 0;  // will store last time LED was updated
 // constants won't change:
 const long interval = 1000;  // interval at which to blink (milliseconds)
 
+// state of the light. 0 means yellow, 1 means red, 2 means green
 int state = 0;
 
 void setup(){
-    pinMode(red, OUTPUT);
-    pinMode(yellow, OUTPUT);
-    pinMode(green,   OUTPUT);
-    pinMode(button_pin, INPUT_PULLUP);
+    pinMode(red1, OUTPUT);
+    pinMode(yellow1, OUTPUT);
+    pinMode(green1,   OUTPUT);
+    pinMode(button1_pin, INPUT_PULLUP);
+    pinMode(red2, OUTPUT);
+    pinMode(yellow2, OUTPUT);
+    pinMode(green2,   OUTPUT);
+    pinMode(button2_pin, INPUT_PULLUP);
 
     // begin serial port
   Serial.begin (9600);
@@ -51,7 +60,7 @@ void loop(){
 
   delay(500);
 
-  if (button_state == LOW and distance_cm < 100) {
+  if (button1_state == LOW and distance_cm < 100) {
       timedLights();
   }
   else {
@@ -61,6 +70,8 @@ void loop(){
 
 }
 void timedLights(){
+  unsigned long currentMillis = millis();
+
   if (currentMillis - previousMillis >= interval && state = 0) {
     // save the last time you blinked the LED
     previousMillis = currentMillis;
