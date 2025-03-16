@@ -10,8 +10,6 @@ int last_state = LOW;
 
 int trigPin = 6;    // TRIG pin
 int echoPin = 7;    // ECHO pin
-int trigPin2 = 1;    // TRIG pin
-int echoPin2 = 2;    // ECHO pin
 
 float duration_us, distance_cm;
 
@@ -52,10 +50,6 @@ void setup(){
   pinMode(trigPin, OUTPUT);
   // configure the echo pin to input mode
   pinMode(echoPin, INPUT);
-  // configure the trigger pin to output mode
-  pinMode(trigPin2, OUTPUT);
-  // configure the echo pin to input mode
-  pinMode(echoPin2, INPUT);
 }
 unsigned long priorsensorMillis = millis();
 
@@ -121,7 +115,7 @@ void timedLights(){
     state = 2;
   }
 
-  if (currentMillis - previousMillis >= interval2 && state == 2) {
+  if (currentMillis - previousMillis >= interval2 && state == 2 && isRed2) {
     // save the last time you blinked the LED
     previousMillis = currentMillis;
     // turn   off red and yellow, then turn on green
@@ -155,7 +149,7 @@ void timedLights(){
     state2 = 2;
   }
 
-  if (currentMillis - previousMillis2 >= interval5 && state2 == 2) {
+  if (currentMillis - previousMillis2 >= interval5 && state2 == 2 && isRed1) {
     // save the last time you blinked the LED
     previousMillis2 = currentMillis;
     // turn   off red and yellow, then turn on green
@@ -173,9 +167,11 @@ void changeLights(){
   unsigned long currentMillis = millis();
 
   if (isRed2){
+    previousMillis = currentMillis;
     digitalWrite(yellow1, LOW);
     digitalWrite(red1, LOW);
     digitalWrite(green1, HIGH);
+    isGreen1 = true;
     // makes state so the light stays green after button is released
     state = 2;      
   }
