@@ -31,6 +31,8 @@ const long interval5 = 5000;
 int state = 0;
 int state2 = 2;
 
+bool isGreen1 = false; 
+bool isRed1 = false;
 bool isRed2 = false;
 
 void setup(){
@@ -81,8 +83,12 @@ void loop(){
 
 
   int button1_state = digitalRead(button1_pin);
+  int button2_state = digitalRead(button2_pin);
   if (button1_state == HIGH && state != 1 && distance_cm > 10) {
       changeLights();
+  }
+  else if (button2_state == HIGH && state2 != 1 && distance_cm > 10){
+    changeLights2();
   }
   else{
       timedLights();
@@ -100,6 +106,7 @@ void timedLights(){
     // green off, yellow on for 3 seconds
     digitalWrite(green1, LOW);
     digitalWrite(yellow1, HIGH);
+    isGreen1 = false;
     state = 1;
   }
 
@@ -110,6 +117,7 @@ void timedLights(){
     digitalWrite(yellow1, LOW);
     digitalWrite(red1, HIGH);
     digitalWrite(green1, LOW);
+    isRed1 = true;
     state = 2;
   }
 
@@ -120,6 +128,8 @@ void timedLights(){
     digitalWrite(yellow1, LOW);
     digitalWrite(red1,   LOW);
     digitalWrite(green1, HIGH);
+    isGreen1 = true;
+    isRed1 = false;
     state = 0;
   }
 
@@ -189,8 +199,40 @@ void changeLights(){
     digitalWrite(red2, HIGH);
     digitalWrite(green2, LOW);
     // makes state so the light stays red after button is released
+    state2 = 1;
+  }
+} 
+void changeLights2(){
+  // checks time in order to time the light changes
+  unsigned long currentMillis = millis();
+
+  if (isRed1){
+    digitalWrite(yellow2, LOW);
+    digitalWrite(red2, LOW);
+    digitalWrite(green2, HIGH);
+    // makes state so the light stays green after button is released
+    state2 = 2;      
   }
   
 
-    
+  if (currentMillis - previousMillis >= interval0 && !isRed1) {
+    // save the last time you blinked the LED
+    previousMillis = currentMillis;
+    // green off, yellow on for 3 seconds
+    digitalWrite(green1, LOW);
+    digitalWrite(yellow1, HIGH);
+    state = 1;
+  }
+
+  if (currentMillis - previousMillis >= interval4 && state == 1) {
+    // save the last time you blinked the LED
+    isRed1 = true;
+    previousMillis = currentMillis;
+    // turn off   yellow, then turn red on for 5 seconds
+    digitalWrite(yellow1, LOW);
+    digitalWrite(red1, HIGH);
+    digitalWrite(green1, LOW);
+    // makes state so the light stays red after button is released
+    state = 1;
+  }
 }
