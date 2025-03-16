@@ -4,4 +4,4 @@
 2. Install a motion sensor on the closest traffic light monitoring the approximate area marked S to detect passing cars
 3. Connect inductive wires & sensors to microcontroller system in every pair of traffic lights as shown in the diagram
 4. Replicate steps 1-3 for the remaining pairs of lanes to complete the intersection
-![A Tinkercad diagram of the Arduino setup](/main/unnamed.png)
+![A Tinkercad diagram of the Arduino setup](https://github.com/MarcusAnastacio/Wally/main/unnamed.png)
