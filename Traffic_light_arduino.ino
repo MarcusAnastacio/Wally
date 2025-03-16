@@ -22,9 +22,6 @@ unsigned long previousMillis2 = 0;  // will store last time LED was updated
 const long interval0 = 3000;  // interval at which to blink (milliseconds)
 const long interval1 = 1000;
 const long interval2 = 5000;
-const long interval3 = 3000;  // interval at which to blink (milliseconds)
-const long interval4 = 1000;
-const long interval5 = 5000;
 // state of the light. 0 means yellow, 1 means red, 2 means green
 int state = 0;
 int state2 = 2;
@@ -129,7 +126,7 @@ void timedLights(){
 
   // handles second traffic light
 
-  if (currentMillis - previousMillis2 >= interval3 && state2 == 0) {
+  if (currentMillis - previousMillis2 >= interval0 && state2 == 0) {
     // save the last time you blinked the LED
     previousMillis2 = currentMillis;
     // green off, yellow on for 3 seconds
@@ -138,7 +135,7 @@ void timedLights(){
     state2 = 1;
   }
 
-  if (currentMillis - previousMillis2 >= interval4 && state2 == 1) {
+  if (currentMillis - previousMillis2 >= interval1 && state2 == 1) {
     // save the last time you blinked the LED
     previousMillis2 = currentMillis;
     // turn off   yellow, then turn red on for 5 seconds
@@ -149,7 +146,7 @@ void timedLights(){
     state2 = 2;
   }
 
-  if (currentMillis - previousMillis2 >= interval5 && state2 == 2 && isRed1) {
+  if (currentMillis - previousMillis2 >= interval2 && state2 == 2 && isRed1) {
     // save the last time you blinked the LED
     previousMillis2 = currentMillis;
     // turn   off red and yellow, then turn on green
@@ -172,12 +169,13 @@ void changeLights(){
     digitalWrite(red1, LOW);
     digitalWrite(green1, HIGH);
     isGreen1 = true;
+    isRed1 = false;
     // makes state so the light stays green after button is released
     state = 2;      
   }
   
 
-  if (currentMillis - previousMillis2 >= interval3 && !isRed2) {
+  if (currentMillis - previousMillis2 >= interval0 && !isRed2) {
     // save the last time you blinked the LED
     previousMillis2 = currentMillis;
     // green off, yellow on for 3 seconds
@@ -186,14 +184,14 @@ void changeLights(){
     state2 = 1;
   }
 
-  if (currentMillis - previousMillis2 >= interval4 && state2 == 1) {
+  if (currentMillis - previousMillis2 >= interval1 && state2 == 1) {
     // save the last time you blinked the LED
-    isRed2 = true;
     previousMillis2 = currentMillis;
     // turn off   yellow, then turn red on for 5 seconds
     digitalWrite(yellow2, LOW);
     digitalWrite(red2, HIGH);
     digitalWrite(green2, LOW);
+    isRed2 = true;
     // makes state so the light stays red after button is released
     state2 = 1;
   }
@@ -206,6 +204,7 @@ void changeLights2(){
     digitalWrite(yellow2, LOW);
     digitalWrite(red2, LOW);
     digitalWrite(green2, HIGH);
+    isRed2 = false;
     // makes state so the light stays green after button is released
     state2 = 2;      
   }
@@ -220,14 +219,14 @@ void changeLights2(){
     state = 1;
   }
 
-  if (currentMillis - previousMillis >= interval4 && state == 1) {
+  if (currentMillis - previousMillis >= interval1 && state == 1) {
     // save the last time you blinked the LED
-    isRed1 = true;
     previousMillis = currentMillis;
     // turn off   yellow, then turn red on for 5 seconds
     digitalWrite(yellow1, LOW);
     digitalWrite(red1, HIGH);
     digitalWrite(green1, LOW);
+    isRed1 = true;
     // makes state so the light stays red after button is released
     state = 1;
   }
