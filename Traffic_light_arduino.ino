@@ -26,7 +26,6 @@ const long interval2 = 5000;
 int state = 0;
 int state2 = 2;
 
-bool isGreen1 = false; 
 bool isRed1 = false;
 bool isRed2 = false;
 
@@ -72,9 +71,13 @@ void loop(){
   priorsensorMillis = millis();
   }
 
-
+  // checks if button is being pressed
   int button1_state = digitalRead(button1_pin);
   int button2_state = digitalRead(button2_pin);
+
+  // if there is a car waiting, the light is not yellow and there are
+  // no cars driving across the intersection, switch the light to green
+  // to allow the waiting cars to go.
   if (button1_state == HIGH && state != 1 && distance_cm > 10) {
       changeLights();
   }
@@ -90,14 +93,19 @@ void timedLights(){
   // checks time in order to time the light changes
   unsigned long currentMillis = millis();
 
-  //handles first traffic light
+  // handles first traffic light
+
+  // each if statement checks if the time bassed is greater than the interval
+  // for that light colour and if the state is approriate for that color.
+  // e.g.: the state signifies green and 3 seconds have passed so the 
+  // light should change to yellow
+
   if (currentMillis - previousMillis >= interval0 && state == 0) {
     // save the last time you blinked the LED
     previousMillis = currentMillis;
     // green off, yellow on for 3 seconds
     digitalWrite(green1, LOW);
     digitalWrite(yellow1, HIGH);
-    isGreen1 = false;
     state = 1;
   }
 
@@ -119,7 +127,6 @@ void timedLights(){
     digitalWrite(yellow1, LOW);
     digitalWrite(red1,   LOW);
     digitalWrite(green1, HIGH);
-    isGreen1 = true;
     isRed1 = false;
     state = 0;
   }
@@ -146,6 +153,7 @@ void timedLights(){
     state2 = 2;
   }
 
+
   if (currentMillis - previousMillis2 >= interval2 && state2 == 2 && isRed1) {
     // save the last time you blinked the LED
     previousMillis2 = currentMillis;
@@ -160,21 +168,21 @@ void timedLights(){
 }
 
 void changeLights(){
-    // checks time in order to time the light changes
+  // checks time in order to time the light changes
   unsigned long currentMillis = millis();
 
+  // only changes to green if the opposite light is red
   if (isRed2){
     previousMillis = currentMillis;
     digitalWrite(yellow1, LOW);
     digitalWrite(red1, LOW);
     digitalWrite(green1, HIGH);
-    isGreen1 = true;
     isRed1 = false;
     // makes state so the light stays green after button is released
     state = 2;      
   }
   
-
+  // changes to yellow if it is currently not red and the interval has passed
   if (currentMillis - previousMillis2 >= interval0 && !isRed2) {
     // save the last time you blinked the LED
     previousMillis2 = currentMillis;
@@ -184,6 +192,7 @@ void changeLights(){
     state2 = 1;
   }
 
+  // changes to red if it is in the correct state and the interval has passed
   if (currentMillis - previousMillis2 >= interval1 && state2 == 1) {
     // save the last time you blinked the LED
     previousMillis2 = currentMillis;
@@ -200,6 +209,7 @@ void changeLights2(){
   // checks time in order to time the light changes
   unsigned long currentMillis = millis();
 
+  // only changes to green if the opposite light is red
   if (isRed1){
     digitalWrite(yellow2, LOW);
     digitalWrite(red2, LOW);
@@ -209,7 +219,7 @@ void changeLights2(){
     state2 = 2;      
   }
   
-
+  // changes to yellow if it is currently not red and the interval has passed
   if (currentMillis - previousMillis >= interval0 && !isRed1) {
     // save the last time you blinked the LED
     previousMillis = currentMillis;
@@ -219,6 +229,7 @@ void changeLights2(){
     state = 1;
   }
 
+  // changes to red if it is in the correct state and the interval has passed
   if (currentMillis - previousMillis >= interval1 && state == 1) {
     // save the last time you blinked the LED
     previousMillis = currentMillis;
