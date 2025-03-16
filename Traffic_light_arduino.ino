@@ -19,9 +19,9 @@ unsigned long previousMillis = 0;  // will store last time LED was updated
 unsigned long previousMillis2 = 0;  // will store last time LED was updated
 
 // constants won't change:
-const long interval0 = 3000;  // interval at which to blink (milliseconds)
-const long interval1 = 1000;
-const long interval2 = 5000;
+const long interval0 = 8000;  // interval at which to blink (milliseconds)
+const long interval1 = 2000;
+const long interval2 = 12000;
 // state of the light. 0 means yellow, 1 means red, 2 means green
 int state = 0;
 int state2 = 2;
@@ -123,6 +123,8 @@ void timedLights(){
   if (currentMillis - previousMillis >= interval2 && state == 2 && isRed2) {
     // save the last time you blinked the LED
     previousMillis = currentMillis;
+    // delay to allow time for buffer between red and green change
+    delay(750);
     // turn   off red and yellow, then turn on green
     digitalWrite(yellow1, LOW);
     digitalWrite(red1,   LOW);
@@ -157,6 +159,8 @@ void timedLights(){
   if (currentMillis - previousMillis2 >= interval2 && state2 == 2 && isRed1) {
     // save the last time you blinked the LED
     previousMillis2 = currentMillis;
+    // delay to allow time for buffer between red and green change
+    delay(750);
     // turn   off red and yellow, then turn on green
     digitalWrite(yellow2, LOW);
     digitalWrite(red2, LOW);
