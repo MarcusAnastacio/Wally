@@ -2,20 +2,23 @@ int red1 = 4;
 int yellow1 = 3;
 int green1 = 2;
 int red2 = 10;
-int yellow2 = 11;
-int green2 = 12;
+int yellow2 = 9;
+int green2 = 8;
 int button1_pin = 5;
-int button2_pin = 6;
+int button2_pin = 11;
 int last_state = LOW;
 
 int trigPin = 6;    // TRIG pin
 int echoPin = 7;    // ECHO pin
+int trigPin2 = 1;    // TRIG pin
+int echoPin2 = 2;    // ECHO pin
 
 float duration_us, distance_cm;
 
 // Generally, you should use "unsigned long" for variables that hold time
 // The value will quickly become too large for an int to store
 unsigned long previousMillis = 0;  // will store last time LED was updated
+unsigned long previousMillis2 = 0;  // will store last time LED was updated
 
 // constants won't change:
 const long interval0 = 3000;  // interval at which to blink (milliseconds)
@@ -28,6 +31,8 @@ const long interval5 = 5000;
 int state = 0;
 int state2 = 2;
 
+bool isRed2 = false;
+
 void setup(){
     pinMode(red1, OUTPUT);
     pinMode(yellow1, OUTPUT);
@@ -35,7 +40,7 @@ void setup(){
     pinMode(button1_pin, INPUT_PULLUP);
     pinMode(red2, OUTPUT);
     pinMode(yellow2, OUTPUT);
-    pinMode(green2,   OUTPUT);
+    pinMode(green2, OUTPUT);
     pinMode(button2_pin, INPUT_PULLUP);
 
     // begin serial port
@@ -45,6 +50,10 @@ void setup(){
   pinMode(trigPin, OUTPUT);
   // configure the echo pin to input mode
   pinMode(echoPin, INPUT);
+  // configure the trigger pin to output mode
+  pinMode(trigPin2, OUTPUT);
+  // configure the echo pin to input mode
+  pinMode(echoPin2, INPUT);
 }
 unsigned long priorsensorMillis = millis();
 
@@ -66,13 +75,13 @@ void loop(){
   Serial.print("distance: ");
   Serial.print(distance_cm);
   Serial.println(" cm");
-  
+
   priorsensorMillis = millis();
   }
 
 
   int button1_state = digitalRead(button1_pin);
-  if (button1_state == HIGH && state == 2 && distance_cm > 100) {
+  if (button1_state == HIGH && state != 1 && distance_cm > 10) {
       changeLights();
   }
   else{
@@ -81,6 +90,7 @@ void loop(){
 
 }
 void timedLights(){
+  // checks time in order to time the light changes
   unsigned long currentMillis = millis();
 
   //handles first traffic light
@@ -115,41 +125,72 @@ void timedLights(){
 
   // handles second traffic light
 
-  if (currentMillis - previousMillis >= interval3 && state2 == 0) {
+  if (currentMillis - previousMillis2 >= interval3 && state2 == 0) {
     // save the last time you blinked the LED
-    previousMillis = currentMillis;
+    previousMillis2 = currentMillis;
     // green off, yellow on for 3 seconds
     digitalWrite(green2, LOW);
     digitalWrite(yellow2, HIGH);
     state2 = 1;
   }
 
-  if (currentMillis - previousMillis >= interval4 && state2 == 1) {
+  if (currentMillis - previousMillis2 >= interval4 && state2 == 1) {
     // save the last time you blinked the LED
-    previousMillis = currentMillis;
+    previousMillis2 = currentMillis;
     // turn off   yellow, then turn red on for 5 seconds
     digitalWrite(yellow2, LOW);
     digitalWrite(red2, HIGH);
     digitalWrite(green2, LOW);
+    isRed2 = true;
     state2 = 2;
   }
 
-  if (currentMillis - previousMillis >= interval5 && state2 == 2) {
+  if (currentMillis - previousMillis2 >= interval5 && state2 == 2) {
     // save the last time you blinked the LED
-    previousMillis = currentMillis;
+    previousMillis2 = currentMillis;
     // turn   off red and yellow, then turn on green
     digitalWrite(yellow2, LOW);
     digitalWrite(red2, LOW);
     digitalWrite(green2, HIGH);
+    isRed2 = false;
     state2 = 0;
   }
 
 }
 
 void changeLights(){
-  digitalWrite(yellow1, LOW);
-  digitalWrite(red1, LOW);
-  digitalWrite(green1, HIGH);
+    // checks time in order to time the light changes
+  unsigned long currentMillis = millis();
+
+  if (isRed2){
+    digitalWrite(yellow1, LOW);
+    digitalWrite(red1, LOW);
+    digitalWrite(green1, HIGH);
+    // makes state so the light stays green after button is released
+    state = 2;      
+  }
+  
+
+  if (currentMillis - previousMillis2 >= interval3 && !isRed2) {
+    // save the last time you blinked the LED
+    previousMillis2 = currentMillis;
+    // green off, yellow on for 3 seconds
+    digitalWrite(green2, LOW);
+    digitalWrite(yellow2, HIGH);
+    state2 = 1;
+  }
+
+  if (currentMillis - previousMillis2 >= interval4 && state2 == 1) {
+    // save the last time you blinked the LED
+    isRed2 = true;
+    previousMillis2 = currentMillis;
+    // turn off   yellow, then turn red on for 5 seconds
+    digitalWrite(yellow2, LOW);
+    digitalWrite(red2, HIGH);
+    digitalWrite(green2, LOW);
+    // makes state so the light stays red after button is released
+  }
+  
 
     
 }
